@@ -6,10 +6,12 @@
 
 'use strict';
 /** unify browser specific implementations */
-var indexedDB = window.indexedDB||window.mozIndexedDB||window.webkitIndexedDB||window.msIndexedDB;
-var IDBKeyRange=window.IDBKeyRange||window.mozIDBKeyRange||window.webkitIDBKeyRange||window.msIDBKeyRange;
 
 angular.module('xc.indexedDB', []).provider('$indexedDB', function() {
+    var indexedDB = window.indexedDB||window.mozIndexedDB||
+                    window.webkitIndexedDB||window.msIndexedDB;
+    var IDBKeyRange = window.IDBKeyRange||window.mozIDBKeyRange||
+                    window.webkitIDBKeyRange||window.msIDBKeyRange;
     var module          = this,
         /** IDBTransaction mode constants */
         READONLY        = "readonly",
