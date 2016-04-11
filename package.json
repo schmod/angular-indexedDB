@@ -1,0 +1,19 @@
+{
+  "name": "angular-indexeddb",
+  "version": "0.0.0",
+  "description": "angular-indexedDB =================",
+  "main": "src/indexeddb.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/learningobjectsinc/angular-indexedDB.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/learningobjectsinc/angular-indexedDB/issues"
+  },
+  "homepage": "https://github.com/learningobjectsinc/angular-indexedDB#readme"
+}
