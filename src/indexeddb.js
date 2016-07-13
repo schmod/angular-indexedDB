@@ -40,7 +40,7 @@ angular.module('xc.indexedDB', []).provider('$indexedDB', function() {
         console.log('Transaction failed: ' + e.target.errorCode);
     };
     module.onDatabaseError = function(e) {
-        e.preventDefault(); // don't raise ConstraintError in firefox.  See https://bugzilla.mozilla.org/show_bug.cgi?id=872873
+        typeof e.preventDefault === 'function' && e.preventDefault(); // don't raise ConstraintError in firefox.  See https://bugzilla.mozilla.org/show_bug.cgi?id=872873
         console.error("Database error: " + (e.target.webkitErrorMessage || e.target.errorCode));
     };
     module.onDatabaseBlocked = function(e) {
