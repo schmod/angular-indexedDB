@@ -40,6 +40,7 @@ angular.module('xc.indexedDB', []).provider('$indexedDB', function() {
         console.log('Transaction failed: ' + e.target.errorCode);
     };
     module.onDatabaseError = function(e) {
+        e.preventDefault(); // don't raise ConstraintError in firefox.  See https://bugzilla.mozilla.org/show_bug.cgi?id=872873
         console.error("Database error: " + (e.target.webkitErrorMessage || e.target.errorCode));
     };
     module.onDatabaseBlocked = function(e) {
@@ -135,7 +136,7 @@ angular.module('xc.indexedDB', []).provider('$indexedDB', function() {
             if(module.dbPromise) {
                 return module.dbPromise;
             }
-            
+
             var d = $q.defer();
             module.dbPromise = d.promise;
 
@@ -171,7 +172,7 @@ angular.module('xc.indexedDB', []).provider('$indexedDB', function() {
          * @name promiseRequest
          * @function
          *
-         * @description wraps an IDBRequest in a $q promise. 
+         * @description wraps an IDBRequest in a $q promise.
          *
          * @params {object} IDBObjectStore that we are working on
          * @params {function} fn function to call
@@ -183,14 +184,16 @@ angular.module('xc.indexedDB', []).provider('$indexedDB', function() {
             var args = Array.prototype.slice.call(arguments, 2);
             try {
                 var req = fn.apply(store, args);
-                req.onerror = function() {
+                req.onerror = function(e) {
                     reject(d, req.error);
+                    module.onDatabaseError(e);
                 };
                 req.onsuccess = function() {
                     resolve(d, req.result);
                 };
             } catch (e) {
                 d.reject(e);
+                module.onDatabaseError(e);
             }
             return d.promise;
         };
@@ -204,7 +207,7 @@ angular.module('xc.indexedDB', []).provider('$indexedDB', function() {
          *
          * @params {object} IDBObjectStore that we are working on
          * @params {function} fn function to call
-         * @params {array|object} object to be passed to function, or an array of 
+         * @params {array|object} object to be passed to function, or an array of
          *   objects to be individually passed to the function.
          * @returns {object} If passed a single object, a promise that will resolve with
          *   the IDBRequest's result.  If passed an array, a promise that will resolve
