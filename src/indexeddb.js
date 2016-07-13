@@ -40,9 +40,12 @@ angular.module('xc.indexedDB', []).provider('$indexedDB', function() {
         console.log('Transaction failed: ' + e.target.errorCode);
     };
     module.onDatabaseError = function(e) {
-        typeof e.preventDefault === 'function' && e.preventDefault(); // don't raise ConstraintError in firefox.  See https://bugzilla.mozilla.org/show_bug.cgi?id=872873
+        e.preventDefault(); // don't raise ConstraintError in firefox.  See https://bugzilla.mozilla.org/show_bug.cgi?id=872873
         console.error("Database error: " + (e.target.webkitErrorMessage || e.target.errorCode));
     };
+    module.onDatabaseException = function(e) {
+        console.error("Database Error: " + e.message, e);
+    }
     module.onDatabaseBlocked = function(e) {
         // If some other tab is loaded with the database, then it needs to be closed
         // before we can proceed.
@@ -162,7 +165,7 @@ angular.module('xc.indexedDB', []).provider('$indexedDB', function() {
                 };
             } catch (e) {
                 d.reject(e);
-                module.onDatabaseError(e);
+                module.onDatabaseException(e);
             }
             return module.dbPromise;
         };
@@ -193,7 +196,7 @@ angular.module('xc.indexedDB', []).provider('$indexedDB', function() {
                 };
             } catch (e) {
                 d.reject(e);
-                module.onDatabaseError(e);
+                module.onDatabaseException(e);
             }
             return d.promise;
         };
