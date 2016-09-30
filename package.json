@@ -43,6 +43,7 @@
   "engines": {
     "node": ">=0.10.0"
   },
+  "main": "angular-indexed-db.js",
   "scripts": {
     "test": "grunt test",
     "preinstall": "bower >/dev/null || sudo npm install bower grunt-cli -g",
